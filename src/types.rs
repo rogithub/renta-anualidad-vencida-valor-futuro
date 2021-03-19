@@ -99,8 +99,9 @@ pub mod types {
         }
         result
     }
-
-    pub fn output_to_json(output: &Output) -> String {
-        serde_json::to_string(output).unwrap()
-    }
+    /*
+        pub fn output_to_json(output: &Output) -> String {
+            serde_json::to_string(output).unwrap()
+        }
+    */
 }
