@@ -50,15 +50,12 @@ pub mod types {
         let mut result = Vec::new();
         match item {
             Input::Renta { s, i, m, n } => {
-                let interes_periodo = (i / m) * s;
-                let pago = renta + interes_periodo;
-                let saldo_insoluto = s.clone();
-                let mut interes_acumulado = interes_periodo;
-                let abono_periodo = pago - interes_acumulado;
-                let _capital_pagado = pago - interes_acumulado;
-                let mut abono_acumulado = abono_periodo;
-                let capital_pagado = saldo_insoluto - abono_acumulado;
                 let rounds = ((m * n) + 1.0) as i64;
+                let interes_periodo = i / m;
+                let pago = renta + (interes_periodo * s);
+                let mut saldo_insoluto = s.clone();
+                let mut capital_pagado = 0.0;
+
                 for periodo in 0..rounds {
                     if periodo == 0 {
                         result.push(Output {
@@ -71,17 +68,32 @@ pub mod types {
                         });
                         continue;
                     }
+
+                    if periodo == 1 {
+                        saldo_insoluto = saldo_insoluto - renta;
+                        capital_pagado = renta;
+                        result.push(Output {
+                            periodo: periodo,
+                            pago: pago as f64,
+                            interes: interes_periodo * s,
+                            abono: renta as f64,
+                            capital_pagado: capital_pagado,
+                            saldo_insoluto: saldo_insoluto,
+                        });
+                        continue;
+                    }
+                    let interes = interes_periodo * saldo_insoluto;
+                    let abono = pago - interes;
+                    capital_pagado = capital_pagado + abono;
+                    saldo_insoluto = saldo_insoluto - abono;
                     result.push(Output {
                         periodo: periodo,
                         pago: pago,
-                        interes: interes_acumulado,
-                        abono: abono_periodo,
+                        interes: interes,
+                        abono: abono,
                         capital_pagado: capital_pagado,
-                        saldo_insoluto: saldo_insoluto.clone(),
+                        saldo_insoluto: saldo_insoluto,
                     });
-
-                    interes_acumulado = interes_acumulado + interes_periodo;
-                    abono_acumulado = abono_acumulado + abono_periodo;
                 }
             }
         }
