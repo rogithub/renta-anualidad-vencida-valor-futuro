@@ -53,49 +53,44 @@ pub mod types {
         let mut capital_pagado = 0.0;
 
         for periodo in 0..rounds {
-            if periodo == 0 {
-                result.push(Output {
+            let o = match periodo {
+                0 => Output {
                     periodo: periodo,
                     pago: 0 as f64,
                     interes: 0 as f64,
                     abono: 0 as f64,
                     capital_pagado: 0 as f64,
                     saldo_insoluto: saldo_insoluto.clone(),
-                });
-                continue;
-            }
-
-            if periodo == 1 {
-                saldo_insoluto = saldo_insoluto - renta;
-                capital_pagado = renta;
-                result.push(Output {
-                    periodo: periodo,
-                    pago: pago as f64,
-                    interes: interes_periodo * s,
-                    abono: renta as f64,
-                    capital_pagado: capital_pagado,
-                    saldo_insoluto: saldo_insoluto,
-                });
-                continue;
-            }
-            let interes = interes_periodo * saldo_insoluto;
-            let abono = pago - interes;
-            capital_pagado = capital_pagado + abono;
-            saldo_insoluto = saldo_insoluto - abono;
-            result.push(Output {
-                periodo: periodo,
-                pago: pago,
-                interes: interes,
-                abono: abono,
-                capital_pagado: capital_pagado,
-                saldo_insoluto: saldo_insoluto,
-            });
+                },
+                1 => {
+                    saldo_insoluto = saldo_insoluto - renta;
+                    capital_pagado = renta;
+                    Output {
+                        periodo: periodo,
+                        pago: pago as f64,
+                        interes: interes_periodo * s,
+                        abono: renta as f64,
+                        capital_pagado: capital_pagado,
+                        saldo_insoluto: saldo_insoluto,
+                    }
+                }
+                _ => {
+                    let interes = interes_periodo * saldo_insoluto;
+                    let abono = pago - interes;
+                    capital_pagado = capital_pagado + abono;
+                    saldo_insoluto = saldo_insoluto - abono;
+                    Output {
+                        periodo: periodo,
+                        pago: pago,
+                        interes: interes,
+                        abono: abono,
+                        capital_pagado: capital_pagado,
+                        saldo_insoluto: saldo_insoluto,
+                    }
+                }
+            };
+            result.push(o);
         }
         result
     }
-    /*
-        pub fn output_to_json(output: &Output) -> String {
-            serde_json::to_string(output).unwrap()
-        }
-    */
 }
