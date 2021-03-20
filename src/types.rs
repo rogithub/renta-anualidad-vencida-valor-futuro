@@ -93,4 +93,14 @@ pub mod types {
         }
         result
     }
+
+    pub fn to_csv(outputs: Vec<Output>) {
+        println!("PERIODO,PAGO,INTERES,ABONO,CAPITAL PAGADO,SALDO INSOLUTO");
+        for o in outputs {
+            println!(
+                "{:?},{:.2},{:.2},{:.2},{:.2},{:.2}",
+                o.periodo, o.pago, o.interes, o.abono, o.capital_pagado, o.saldo_insoluto
+            );
+        }
+    }
 }
