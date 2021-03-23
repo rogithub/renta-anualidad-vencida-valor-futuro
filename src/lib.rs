@@ -17,8 +17,7 @@ pub mod types {
             let base = 1.0 + (i / m);
             let exponente = m * n;
             let arriba = f64::powf(base, exponente) - 1.0;
-            let r = s / (arriba / (i / m));
-            r
+            s / (arriba / (i / m))
         }
     }
 
@@ -28,7 +27,7 @@ pub mod types {
         deserialized
     }
 
-    pub fn first<T>(v: &Vec<T>) -> Option<&T> {
+    pub fn first<T>(v: &[T]) -> Option<&T> {
         v.first()
     }
     #[derive(Clone, Serialize, Deserialize, Debug)]
@@ -49,43 +48,43 @@ pub mod types {
         let rounds = ((m * n) + 1.0) as i64;
         let interes_periodo = i / m;
         let pago = renta + (interes_periodo * s);
-        let mut saldo_insoluto = s.clone();
+        let mut saldo_insoluto = *s;
         let mut capital_pagado = 0.0;
 
         for periodo in 0..rounds {
             let o = match periodo {
                 0 => Output {
-                    periodo: periodo,
+                    periodo,
                     pago: 0 as f64,
                     interes: 0 as f64,
                     abono: 0 as f64,
                     capital_pagado: 0 as f64,
-                    saldo_insoluto: saldo_insoluto.clone(),
+                    saldo_insoluto,
                 },
                 1 => {
-                    saldo_insoluto = saldo_insoluto - renta;
+                    saldo_insoluto -= renta;
                     capital_pagado = renta;
                     Output {
-                        periodo: periodo,
-                        pago: pago as f64,
+                        periodo,
+                        pago,
                         interes: interes_periodo * s,
                         abono: renta as f64,
-                        capital_pagado: capital_pagado,
-                        saldo_insoluto: saldo_insoluto,
+                        capital_pagado,
+                        saldo_insoluto,
                     }
                 }
                 _ => {
                     let interes = interes_periodo * saldo_insoluto;
                     let abono = pago - interes;
-                    capital_pagado = capital_pagado + abono;
-                    saldo_insoluto = saldo_insoluto - abono;
+                    capital_pagado += abono;
+                    saldo_insoluto -= abono;
                     Output {
-                        periodo: periodo,
-                        pago: pago,
-                        interes: interes,
-                        abono: abono,
-                        capital_pagado: capital_pagado,
-                        saldo_insoluto: saldo_insoluto,
+                        periodo,
+                        pago,
+                        interes,
+                        abono,
+                        capital_pagado,
+                        saldo_insoluto,
                     }
                 }
             };

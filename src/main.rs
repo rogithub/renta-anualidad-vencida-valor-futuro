@@ -1,10 +1,10 @@
-use crate::types::types::first;
-use crate::types::types::json_to_input;
-use crate::types::types::to_csv;
-use crate::types::types::to_output;
-use crate::types::types::Renta;
+use crate::lib::types::first;
+use crate::lib::types::json_to_input;
+use crate::lib::types::to_csv;
+use crate::lib::types::to_output;
+use crate::lib::types::Renta;
 use std::io::{self, BufRead};
-mod types;
+mod lib;
 
 fn main() {
     let stdin = io::stdin();
