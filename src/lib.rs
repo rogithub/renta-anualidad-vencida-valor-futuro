@@ -1,37 +1,38 @@
 pub mod types {
-    use serde::{Deserialize, Serialize};
-    use std::io::{self};
+    use clap::Clap;
 
-    #[derive(Clone, Serialize, Deserialize, Debug)]
-    #[serde(rename_all = "camelCase")]
+    #[derive(Clap)]
+    #[clap(version = "1.0", author = "rockdrigo. <correo.rodrigo@gmail.com>")]
     pub struct Renta {
+        #[clap(long = "suma", short = 's', about = "Suma prestada")]
         s: f64,
+        #[clap(long = "interes", short = 'i', about = "Interés porcentual")]
         i: f64,
+        #[clap(
+            short = 'a',
+            long = "años",
+            about = "Número de años en los que se liquida la deuda"
+        )]
+        a: f64,
+        #[clap(
+            long = "mensualidades",
+            short = 'm',
+            default_value = "12.0",
+            about = "Número de mensualidades en un año, si se paga por mes serían 12.0 (default)"
+        )]
         m: f64,
-        n: f64,
     }
 
     impl Renta {
         fn calculate(&self) -> f64 {
-            let Renta { s, i, m, n } = &self;
+            let Renta { s, i, m, a } = &self;
             let base = 1.0 + (i / m);
-            let exponente = m * n;
+            let exponente = m * a;
             let arriba = f64::powf(base, exponente) - 1.0;
             s / (arriba / (i / m))
         }
     }
 
-    pub fn json_to_input(line: io::Result<String>) -> Renta {
-        let json = &line.unwrap();
-        let deserialized: Renta = serde_json::from_str(json).unwrap();
-        deserialized
-    }
-
-    pub fn first<T>(v: &[T]) -> Option<&T> {
-        v.first()
-    }
-    #[derive(Clone, Serialize, Deserialize, Debug)]
-    #[serde(rename_all = "camelCase")]
     pub struct Output {
         pub periodo: i64,
         pub pago: f64,
@@ -44,8 +45,8 @@ pub mod types {
     pub fn to_output(item: &Renta) -> Vec<Output> {
         let renta = item.calculate();
         let mut result = Vec::new();
-        let Renta { s, i, m, n } = item;
-        let rounds = ((m * n) + 1.0) as i64;
+        let Renta { s, i, m, a } = item;
+        let rounds = ((m * a) + 1.0) as i64;
         let interes_periodo = i / m;
         let pago = renta + (interes_periodo * s);
         let mut saldo_insoluto = *s;
