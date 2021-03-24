@@ -1,5 +1,4 @@
 pub mod types {
-    use clap::Clap;
 
     pub trait FormulaToCsv<T> {
         fn calculate(&self) -> f64;
@@ -7,25 +6,10 @@ pub mod types {
         fn to_csv(&self, outputs: Vec<T>);
     }
 
-    #[derive(Clap)]
-    #[clap(version = "1.0", author = "rockdrigo. <correo.rodrigo@gmail.com>")]
     pub struct Renta {
-        #[clap(long = "suma", short = 's', about = "Suma prestada")]
         s: f64,
-        #[clap(long = "interes", short = 'i', about = "Interés porcentual")]
         i: f64,
-        #[clap(
-            short = 'a',
-            long = "años",
-            about = "Número de años en los que se liquida la deuda"
-        )]
         a: f64,
-        #[clap(
-            long = "mensualidades",
-            short = 'm',
-            default_value = "12.0",
-            about = "Número de mensualidades en un año, si se paga por mes serían 12.0 (default)"
-        )]
         m: f64,
     }
 
