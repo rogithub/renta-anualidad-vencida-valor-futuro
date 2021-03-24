@@ -7,10 +7,10 @@ pub mod types {
     }
 
     pub struct Renta {
-        s: f64,
-        i: f64,
-        a: f64,
-        m: f64,
+        pub s: f64,
+        pub i: f64,
+        pub a: f64,
+        pub m: f64,
     }
 
     pub struct Output {

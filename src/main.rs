@@ -7,9 +7,13 @@ use clap::App;
 
 fn main() {
     let yaml = load_yaml!("cli.yml");
-    //let input: Renta = Renta::parse();
-    let matches = App::from_yaml(yaml).get_matches();
-    //input.to_csv(input.to_output());
+    let matches = App::from_yaml(yaml).get_matches();    
 
-    match matches.o {}
+    let s = matches.value_of("suma").unwrap().parse::<f64>().unwrap();
+    let i = matches.value_of("interes").unwrap().parse::<f64>().unwrap();
+    let a = matches.value_of("years").unwrap().parse::<f64>().unwrap();
+    let m = matches.value_of("mensualidades").unwrap_or("12.0").parse::<f64>().unwrap();
+
+    let input = Renta { s, i, a, m };
+    input.to_csv(input.to_output());
 }
