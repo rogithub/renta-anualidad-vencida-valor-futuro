@@ -1,3 +1,4 @@
+use crate::lib::types::FormulaToCsv;
 use crate::lib::types::Renta;
 use clap::Clap;
 mod lib;

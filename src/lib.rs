@@ -1,6 +1,12 @@
 pub mod types {
     use clap::Clap;
 
+    pub trait FormulaToCsv<T> {
+        fn calculate(&self) -> f64;
+        fn to_output(&self) -> Vec<T>;
+        fn to_csv(&self, outputs: Vec<T>);
+    }
+
     #[derive(Clap)]
     #[clap(version = "1.0", author = "rockdrigo. <correo.rodrigo@gmail.com>")]
     pub struct Renta {
@@ -32,8 +38,8 @@ pub mod types {
         pub saldo_insoluto: f64,
     }
 
-    impl Renta {
-        pub fn calculate(&self) -> f64 {
+    impl FormulaToCsv<Output> for Renta {
+        fn calculate(&self) -> f64 {
             let Renta { s, i, m, a } = &self;
             let base = 1.0 + (i / m);
             let exponente = m * a;
@@ -41,7 +47,7 @@ pub mod types {
             s / (arriba / (i / m))
         }
 
-        pub fn to_output(&self) -> Vec<Output> {
+        fn to_output(&self) -> Vec<Output> {
             let Renta { s, i, m, a } = &self;
             let renta = *&self.calculate();
             let mut result = Vec::new();
@@ -92,7 +98,7 @@ pub mod types {
             result
         }
 
-        pub fn to_csv(&self, outputs: Vec<Output>) {
+        fn to_csv(&self, outputs: Vec<Output>) {
             println!("PERIODO,PAGO,INTERES,ABONO,CAPITAL PAGADO,SALDO INSOLUTO");
             for o in outputs {
                 println!(
