@@ -20,7 +20,7 @@ args:
     - years:
         short: a
         long: años
-        value_name: YEARS
+        value_name: AÑOS
         help: Número de años en los que se liquida la deuda
         required: true
         takes_value: true
