@@ -3,7 +3,7 @@ pub mod types {
     pub trait FormulaToCsv<T> {
         fn calculate(&self) -> f64;
         fn to_output(&self) -> Vec<T>;
-        fn to_csv(&self, outputs: Vec<T>);
+        fn to_csv(&self, outputs: Vec<T>) -> Vec<String>;
     }
 
     pub struct Renta {
@@ -82,14 +82,11 @@ pub mod types {
             result
         }
 
-        fn to_csv(&self, outputs: Vec<Output>) {
-            println!("PERIODO,PAGO,INTERES,ABONO,CAPITAL PAGADO,SALDO INSOLUTO");
-            for o in outputs {
-                println!(
-                    "{:?},{:.2},{:.2},{:.2},{:.2},{:.2}",
-                    o.periodo, o.pago, o.interes, o.abono, o.capital_pagado, o.saldo_insoluto
-                );
-            }
+        fn to_csv(&self, outputs: Vec<Output>) -> Vec<String> {
+            outputs.iter().map(|o| 
+                format!("{:?},{:.2},{:.2},{:.2},{:.2},{:.2}",
+                o.periodo, o.pago, o.interes, o.abono, o.capital_pagado, o.saldo_insoluto)
+            ).collect::<Vec<String>>()            
         }
     }
 }

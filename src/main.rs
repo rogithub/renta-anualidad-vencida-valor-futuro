@@ -15,5 +15,11 @@ fn main() {
     let m = matches.value_of("mensualidades").unwrap_or("12.0").parse::<f64>().unwrap();
 
     let input = Renta { s, i, a, m };
-    input.to_csv(input.to_output());
+    let rows = input.to_csv(input.to_output());
+
+    println!("PERIODO,PAGO,INTERES,ABONO,CAPITAL PAGADO,SALDO INSOLUTO");
+    for r in rows {
+        println!("{}", r);
+    }
+
 }
