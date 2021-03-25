@@ -7,9 +7,7 @@ pub mod types {
     pub trait FormulaToCsv<T> where T: OutputToCsv {
         fn calculate(&self) -> f64;
         fn to_output(&self) -> Vec<T>;
-        fn to_csv(&self, outputs: Vec<T>) -> Vec<String>;
     }
-
     
     pub struct Renta {
         pub s: f64,
@@ -92,10 +90,6 @@ pub mod types {
                 result.push(o);
             }
             result
-        }
-
-        fn to_csv(&self, outputs: Vec<Output>) -> Vec<String> {
-            outputs.iter().map(|o| o.to_csv()).collect::<Vec<String>>()            
-        }
+        }        
     }
 }
