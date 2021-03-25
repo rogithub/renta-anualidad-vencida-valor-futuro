@@ -6,7 +6,7 @@ pub mod types {
 
     pub trait FormulaToCsv<T> where T: OutputToCsv {
         fn calculate(&self) -> f64;
-        fn to_output(&self) -> Vec<T>;
+        fn to_output(&self) -> Vec<T>;        
     }
     
     pub struct Renta {
@@ -91,5 +91,14 @@ pub mod types {
             }
             result
         }        
+    }
+
+    pub fn print(r: Renta) {
+        let rows = r.to_output();
+
+        println!("PERIODO,PAGO,INTERES,ABONO,CAPITAL PAGADO,SALDO INSOLUTO");
+        for r in rows {
+            println!("{}", r.to_csv());
+        }
     }
 }
