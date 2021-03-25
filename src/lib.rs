@@ -1,11 +1,16 @@
 pub mod types {
 
-    pub trait FormulaToCsv<T> {
+    pub trait OutputToCsv {
+        fn to_csv(&self) -> String;
+    }
+
+    pub trait FormulaToCsv<T> where T: OutputToCsv {
         fn calculate(&self) -> f64;
         fn to_output(&self) -> Vec<T>;
         fn to_csv(&self, outputs: Vec<T>) -> Vec<String>;
     }
 
+    
     pub struct Renta {
         pub s: f64,
         pub i: f64,
@@ -20,6 +25,13 @@ pub mod types {
         pub abono: f64,
         pub capital_pagado: f64,
         pub saldo_insoluto: f64,
+    }
+
+    impl OutputToCsv for Output {
+        fn to_csv(&self) -> String { 
+            format!("{:?},{:.2},{:.2},{:.2},{:.2},{:.2}",
+            &self.periodo, &self.pago, &self.interes, &self.abono, &self.capital_pagado, &self.saldo_insoluto)
+        }
     }
 
     impl FormulaToCsv<Output> for Renta {
@@ -83,10 +95,7 @@ pub mod types {
         }
 
         fn to_csv(&self, outputs: Vec<Output>) -> Vec<String> {
-            outputs.iter().map(|o| 
-                format!("{:?},{:.2},{:.2},{:.2},{:.2},{:.2}",
-                o.periodo, o.pago, o.interes, o.abono, o.capital_pagado, o.saldo_insoluto)
-            ).collect::<Vec<String>>()            
+            outputs.iter().map(|o| o.to_csv()).collect::<Vec<String>>()            
         }
     }
 }
